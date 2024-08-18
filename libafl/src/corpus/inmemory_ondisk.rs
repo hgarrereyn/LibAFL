@@ -77,7 +77,7 @@ where
         let idx = self.inner.add(testcase)?;
         let testcase = &mut self.get(idx).unwrap().borrow_mut();
         self.save_testcase(testcase, idx)?;
-        *testcase.input_mut() = None;
+        // *testcase.input_mut() = None;
         Ok(idx)
     }
 
@@ -87,7 +87,7 @@ where
         let idx = self.inner.add_disabled(testcase)?;
         let testcase = &mut self.get_from_all(idx).unwrap().borrow_mut();
         self.save_testcase(testcase, idx)?;
-        *testcase.input_mut() = None;
+        // *testcase.input_mut() = None;
         Ok(idx)
     }
 
@@ -98,7 +98,7 @@ where
         self.remove_testcase(&entry)?;
         let testcase = &mut self.get(idx).unwrap().borrow_mut();
         self.save_testcase(testcase, idx)?;
-        *testcase.input_mut() = None;
+        // *testcase.input_mut() = None;
         Ok(entry)
     }
 
