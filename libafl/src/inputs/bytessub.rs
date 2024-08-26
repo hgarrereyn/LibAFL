@@ -253,7 +253,7 @@ where
         &mut self,
         range: R2,
         replace_with: IT,
-    ) -> alloc::vec::Splice<'_, IT::IntoIter>
+    ) -> Option<alloc::vec::Splice<'_, IT::IntoIter>>
     where
         R2: RangeBounds<usize>,
         IT: IntoIterator<Item = u8>,
@@ -262,13 +262,13 @@ where
         self.parent_input.splice(range, replace_with)
     }
 
-    fn drain<R2>(&mut self, range: R2) -> alloc::vec::Drain<'_, u8>
+    fn drain<R2>(&mut self, range: R2) -> Option<alloc::vec::Drain<'_, u8>>
     where
         R2: RangeBounds<usize>,
     {
-        let drain = self.parent_input.drain(self.sub_range(range));
+        let drain = self.parent_input.drain(self.sub_range(range)).unwrap();
         self.range.end -= drain.len();
-        drain
+        Some(drain)
     }
 }
 

@@ -147,13 +147,13 @@ pub trait HasMutatorBytes: HasLen {
     fn extend<'a, I: IntoIterator<Item = &'a u8>>(&mut self, iter: I);
 
     /// Splices the given target bytes according to [`alloc::vec::Vec::splice`]'s rules
-    fn splice<R, I>(&mut self, range: R, replace_with: I) -> Splice<'_, I::IntoIter>
+    fn splice<R, I>(&mut self, range: R, replace_with: I) -> Option<Splice<'_, I::IntoIter>>
     where
         R: RangeBounds<usize>,
         I: IntoIterator<Item = u8>;
 
     /// Drains the given target bytes according to [`alloc::vec::Vec::drain`]'s rules
-    fn drain<R>(&mut self, range: R) -> Drain<'_, u8>
+    fn drain<R>(&mut self, range: R) -> Option<Drain<'_, u8>>
     where
         R: RangeBounds<usize>;
 
@@ -199,19 +199,19 @@ impl<'a> HasMutatorBytes for MutVecInput<'a> {
         self.0.extend(iter);
     }
 
-    fn splice<R, I>(&mut self, range: R, replace_with: I) -> Splice<'_, I::IntoIter>
+    fn splice<R, I>(&mut self, range: R, replace_with: I) -> Option<Splice<'_, I::IntoIter>>
     where
         R: RangeBounds<usize>,
         I: IntoIterator<Item = u8>,
     {
-        self.0.splice::<R, I>(range, replace_with)
+        Some(self.0.splice::<R, I>(range, replace_with))
     }
 
-    fn drain<R>(&mut self, range: R) -> Drain<'_, u8>
+    fn drain<R>(&mut self, range: R) -> Option<Drain<'_, u8>>
     where
         R: RangeBounds<usize>,
     {
-        self.0.drain(range)
+        Some(self.0.drain(range))
     }
 }
 

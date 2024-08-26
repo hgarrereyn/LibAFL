@@ -80,19 +80,19 @@ impl HasMutatorBytes for BytesInput {
         Extend::extend(&mut self.bytes, iter);
     }
 
-    fn splice<R, I>(&mut self, range: R, replace_with: I) -> alloc::vec::Splice<'_, I::IntoIter>
+    fn splice<R, I>(&mut self, range: R, replace_with: I) -> Option<alloc::vec::Splice<'_, I::IntoIter>>
     where
         R: core::ops::RangeBounds<usize>,
         I: IntoIterator<Item = u8>,
     {
-        self.bytes.splice(range, replace_with)
+        Some(self.bytes.splice(range, replace_with))
     }
 
-    fn drain<R>(&mut self, range: R) -> alloc::vec::Drain<'_, u8>
+    fn drain<R>(&mut self, range: R) -> Option<alloc::vec::Drain<'_, u8>>
     where
         R: core::ops::RangeBounds<usize>,
     {
-        self.bytes.drain(range)
+        Some(self.bytes.drain(range))
     }
 }
 
